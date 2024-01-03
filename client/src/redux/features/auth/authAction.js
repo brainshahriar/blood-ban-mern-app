@@ -15,7 +15,7 @@ export const userLogin = createAsyncThunk(
       // Store token
       if (data.success) {
         localStorage.setItem("token", data.token);
-        alert(data.message);
+        window.location.replace('/');
       }
 
       return data;
@@ -72,5 +72,23 @@ export const userRegister = createAsyncThunk(
     }
   }
 );
+//current user
+export const getCurrentUser = createAsyncThunk(
+    '/getCurrentUser',
+    async({rejectWithValue}) =>{
+        try {
+            const res = await axios.get('http://localhost:8000/api/current-user')
+            if(res?.data){
+                return res?.data;
+            }
+        } catch (error) {
+            if (error.response && error.response.data.message) {
+                return rejectWithValue(error.response.data.message);
+              } else {
+                rejectWithValue(error.message);
+              }
+        }
+    }
+)
 
 export default userLogin;
